@@ -16,7 +16,8 @@ class ManufacturingOrders extends React.Component {
     dateOfDL: '',
     dateOfSt: '',
     dateOfEC: '',
-    mos: []
+    mos: [],
+    id_for_product: ''
   }
 
   invetor = []
@@ -100,6 +101,13 @@ class ManufacturingOrders extends React.Component {
   }
 
 
+  searchIDProduct(e) {
+    this.state.id_for_product = e.target.value;
+    console.log(this.state.id_for_product);
+    this.componentDidMount();
+  }
+
+
   
   render() {
   return (
@@ -163,12 +171,14 @@ class ManufacturingOrders extends React.Component {
     </div>
   </div>
 </div>
-<br></br>
+<hr/>
+
 
 <table class="table table-striped">
   <thead>
     <tr>
-      <th scope="col">#</th>
+      <th scope="col"><input type="text" class="form-control" id="inputPassword" placeholder="Search For ID" onChange={(e) => this.searchIDProduct(e)}/></th>
+      <th scope="col">Product ID</th>
       <th scope="col">Product Name</th>
       <th scope="col">Product Code</th>
       <th scope="col">Product Description</th>
@@ -179,16 +189,36 @@ class ManufacturingOrders extends React.Component {
   <tbody>
     
     {
-      this.state.products.map(product =>
-        <tr key={product.pID} onChange={this.handleChecked}>
-                  <td><input type="checkbox" name={product.pID} id="checkbox"/></td>
-                  <td>
-                    {product.product_name}</td>
-                  <td>{product.product_code}</td>
-                  <td>{product.product_description}</td>
-                  <td><input type="number" name={product.pID} id={product.pID+"-quantity"} disabled={false}/></td>
-                  <td><input type="text" name={product.pID} id={product.pID+"-unit"} disabled={false} /></td>
-                </tr>
+      this.state.products.map(product =>{
+        if (this.state.id_for_product === "") {
+          return(
+            <tr key={product.pID} onChange={this.handleChecked}>
+                      <td><input type="checkbox" name={product.pID} id="checkbox"/></td>
+                      <td>{product.pID}</td>
+                      <td>
+                        {product.product_name}</td>
+                      <td>{product.product_code}</td>
+                      <td>{product.product_description}</td>
+                      <td><input type="number" name={product.pID} id={product.pID+"-quantity"} disabled={false}/></td>
+                      <td><input type="text" name={product.pID} id={product.pID+"-unit"} disabled={false} /></td>
+                    </tr>
+          )
+        }
+        else if (this.state.id_for_product == product.pID) {
+          return(
+            <tr key={product.pID} onChange={this.handleChecked}>
+                      <td><input type="checkbox" name={product.pID} id="checkbox"/></td>
+                      <td>{product.pID}</td>
+                      <td>
+                        {product.product_name}</td>
+                      <td>{product.product_code}</td>
+                      <td>{product.product_description}</td>
+                      <td><input type="number" name={product.pID} id={product.pID+"-quantity"} disabled={false}/></td>
+                      <td><input type="text" name={product.pID} id={product.pID+"-unit"} disabled={false} /></td>
+                    </tr>
+          )
+        }
+      }
         )
     }
   </tbody>
@@ -204,11 +234,11 @@ class ManufacturingOrders extends React.Component {
       </div>
           <div class="card innerCard">
 
-          <table class="table">
+  <table class="table">
   <thead class="thead-dark">
     <tr>
       <th scope="col">#</th>
-      <th scope="col">#</th>
+      <th scope="col"><input type="text" class="form-control" id="inputPassword" placeholder="Search For ID" onChange={(e) => this.searchIDProduct(e)}/></th>
       <th scope="col">Status</th>
       <th scope="col">Client Name</th>
       <th scope="col">Date of Manufacturing Order</th>
@@ -227,7 +257,6 @@ class ManufacturingOrders extends React.Component {
               <th scope="row"><button class="btn btn-dark">
         <ReactToPrint
               trigger={() => {
-
             return <button><FaPrint/></button>
           }}
 

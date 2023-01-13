@@ -5,8 +5,13 @@
   background-position:center;
   background-size: cover;
 }
-.btn_bg {
+.btn_bg_ok {
   background-color: #4CAF50;
+  background: #4CAF50;
+}
+.btn_bg_no_ok {
+  background-color: #fdcf38;
+  background: #fdcf38;
 }
 
 body {

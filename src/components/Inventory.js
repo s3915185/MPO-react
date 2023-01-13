@@ -18,7 +18,7 @@ class Inventory extends React.Component {
   }
 
   changeQuantity(key) {
-    axios.put(`http://localhost:8080/api/inventories`, {
+    axios.put(`/api/inventories`, {
       iID: key,
       pID: key,
       quantity: this.state.quantity_change

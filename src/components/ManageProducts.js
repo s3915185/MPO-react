@@ -19,7 +19,9 @@ class ManageProducts extends React.Component {
     product_code_change: '',
     product_description_change: '',
     category_change: '',
-    category_checked: ''
+    category_checked: '',
+    id_for_product: '',
+    id_for_category: ''
   }
 
   handleCategoryChecked = event => {
@@ -137,13 +139,25 @@ class ManageProducts extends React.Component {
     })
   }
 
+  searchIDProduct(e) {
+    this.state.id_for_product = e.target.value;
+    console.log(this.state.id_for_product);
+    this.componentDidMount();
+  }
+
+
+  searchIDCategory(e) {
+    this.state.id_for_category = e.target.value;
+    this.componentDidMount();
+  }
+
   render() {
   return (
 
 
     
 
-      <div class="card innerCard">
+      <div class="card innerCard btn_bg_ok">
 
 
   <div class="row">
@@ -254,16 +268,22 @@ class ManageProducts extends React.Component {
         <table className="table table-stripped">
           <thead>
             <tr>
+              <th scope="col">Product ID</th>
               <th scope="col">Product Name</th>
               <th scope="col">Product Code</th>
               <th scope="col">Product Description</th>
               <th scope="col">Category</th>
+              <th scope="col"><input type="text" class="form-control" id="inputPassword" placeholder="Search For ID" onChange={(e) => this.searchIDProduct(e)}/></th>
             </tr>
           </thead>
           <tbody>
             {
-              this.state.products.map(product => 
-                <tr key={product.pID}>
+              this.state.products.map(product => {
+                if (this.state.id_for_product === "") {
+                  console.log("went here");
+                  return(
+                  <tr key={product.pID}>
+                  <td>{product.pID}</td>
                   <td>
                     {product.product_name}<br/> <input type="text" name='product_name' onChange={this.handleProductNameInputChange}/></td>
                   <td>{product.product_code} <br/> <input type="text" name='product_code' onChange={this.handleProductCodeInputChange}/></td>
@@ -283,6 +303,36 @@ class ManageProducts extends React.Component {
                   <button class="btn btn-dark" onClick={() => this.deleteSubmit(product.pID)}><FaTimes/></button>
                   </div>
                 </tr>
+                  )
+                }
+                else if (this.state.id_for_product !== '') {
+                  if (this.state.id_for_product == product.pID) {
+                    return(
+                      <tr key={product.pID}>
+                        <td>{product.pID}</td>
+                      <td>
+                        {product.product_name}<br/> <input type="text" name='product_name' onChange={this.handleProductNameInputChange}/></td>
+                      <td>{product.product_code} <br/> <input type="text" name='product_code' onChange={this.handleProductCodeInputChange}/></td>
+                      <td>{product.product_description} <br/> <input type="text" name='product_description' onChange={this.handleProductDescriptionInputChange}/></td>
+                      <td>
+                        {
+                          this.state.categories.map(category => {
+                            if (category.cID === product.category) {
+                              return category.category_name;
+                            }
+                          })
+                        }
+    
+                      </td>
+                      <div class="d-flex justify-content-center">
+                      <button class="btn btn-dark" onClick={() => this.putSubmit(product.pID)}><FaPen/></button>
+                      <button class="btn btn-dark" onClick={() => this.deleteSubmit(product.pID)}><FaTimes/></button>
+                      </div>
+                    </tr>
+                      )
+                  }
+                }
+              }
               )
             }
           </tbody>
@@ -305,19 +355,39 @@ class ManageProducts extends React.Component {
         <table className="table table-stripped">
           <thead>
             <tr>
+              <td>Category ID</td>
               <td>Category Name</td>
+              <th scope="col"><input type="text" class="form-control" id="inputPassword" placeholder="Search For ID" onChange={(e) => this.searchIDCategory(e)}/></th>
             </tr>
           </thead>
           <tbody>
             {
-              this.state.categories.map(category => 
+              this.state.categories.map(category => {
+                if (this.state.id_for_category === "") {
+                  return(
                 <tr key={category.cID}>
+                  <td>{category.cID}</td>
                   <td>{category.category_name}<br></br><input type="text" name='product_code' onChange={this.handleCategoryInputChange}/></td>
                   <div class="d-flex justify-content-center">
                   <button class="btn btn-dark" onClick={() => this.putCategorySubmit(category.cID)}><FaPen/></button>
                   <button class="btn btn-dark" onClick={() => this.deleteCategorySubmit(category.cID)}><FaTimes/></button>
                   </div>
                 </tr>
+                  )}
+
+                  else if (this.state.id_for_category == category.cID) {
+                    return(
+                      <tr key={category.cID}>
+                        <td>{category.cID}</td>
+                  <td>{category.category_name}<br></br><input type="text" name='product_code' onChange={this.handleCategoryInputChange}/></td>
+                  <div class="d-flex justify-content-center">
+                  <button class="btn btn-dark" onClick={() => this.putCategorySubmit(category.cID)}><FaPen/></button>
+                  <button class="btn btn-dark" onClick={() => this.deleteCategorySubmit(category.cID)}><FaTimes/></button>
+                  </div>
+                </tr>
+                    )
+                }
+              }
               )
             }
           </tbody>

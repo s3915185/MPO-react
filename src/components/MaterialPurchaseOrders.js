@@ -43,16 +43,34 @@ class MaterialPurchaseOrders extends React.Component {
 
   changeStatus(key) {
 
+    this.state.mos.map(mo => {
+      if (mo.moID === key) {
+        this.state.products.map(product => {
+          const value = document.getElementById(product.pID+'-'+mo.moID+'-qtleft').innerHTML;
+          console.log(product.product_name+ ": "+ value);
+          axios.put(`/api/inventories`, {
+            iID: product.pID,
+            pID: product.pID,
+            quantity: value
+          }).then(res =>{
+            this.componentDidMount();
+          })
+        })
+      }
+    })
+
+    axios.put(`/api/mpo/${key}`, {}).then(res => {
+      this.componentDidMount();
+    })
   }
 
   importInventory(key) {
     this.state.mos.map(mo => {
       mo.productLines.map(productline =>{
         if (productline.pdID === key) {
-
           const el = document.getElementById(key+'-qt').innerHTML;
           console.log(el);
-          axios.put(`http://localhost:8080/api/inventories`, {
+          axios.put(`/api/inventories`, {
                 iID: key,
                 pID: key,
                 quantity: el + (productline.quantity - el)
@@ -70,6 +88,13 @@ class MaterialPurchaseOrders extends React.Component {
         <div class="card innerCard">
         {
           this.state.mos.map(mo =>
+            {
+              if (mo.status === "OK") {
+                return;
+              }
+              else {
+                return(
+
             <div class="card innerCard ">
             <div class="card-body">
 
@@ -78,7 +103,7 @@ class MaterialPurchaseOrders extends React.Component {
                 <h5 class="card-title">Material Purchase Orders: {mo.moID}</h5>
                 </div>
                 <div class="col-sm-6">
-                <button class="btn btn-dark" onClick={this.changeStatus(mo.moID)}>Set Status To Done</button>
+                <button class="btn btn-dark" onClick={() => this.changeStatus(mo.moID)}>Set Status To Done</button>
                 </div>
               </div>
             </div>
@@ -163,7 +188,7 @@ class MaterialPurchaseOrders extends React.Component {
                                       })
                                     }
                                   </td>
-                                  <td>
+                                  <td id={product.pID+'-'+mo.moID+'-qtleft'}>
                                   {
                                       this.state.inventories.map(inventory =>{
                                         if (inventory.pID == product.pID) {
@@ -188,6 +213,10 @@ class MaterialPurchaseOrders extends React.Component {
 
 
         </div>
+                )
+
+              }
+            }
             )
         }
 

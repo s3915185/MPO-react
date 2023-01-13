@@ -65,6 +65,12 @@ class BillOfMaterials extends React.Component {
   </div>
 {
   this.state.mos.map(mo =>
+    {
+      if (mo.status === "OK") {
+        return;
+      }
+      else {
+        return(
     <div>
     <table class="table">
                       <thead class="thead-dark">
@@ -112,6 +118,12 @@ class BillOfMaterials extends React.Component {
     <br/>
     <br/>
     </div>
+
+        )
+      }
+    }
+
+
   )
 }
 </div>
